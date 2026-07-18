@@ -24,11 +24,16 @@
             aspect-ratio: 16 / 9;
             border: 3px solid red;
             box-shadow: 0 0 50px rgba(255, 0, 0, 0.5);
+            background-color: #000;
+            overflow: hidden;
         }
-        iframe {
+        .video-container iframe {
             width: 100%;
             height: 100%;
             border: none;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
         .overlay-text {
             position: absolute;
@@ -39,6 +44,7 @@
             pointer-events: none;
             text-shadow: 0 0 30px rgba(255, 0, 0, 0.9);
             z-index: 10;
+            width: 90%;
         }
         .title {
             font-size: 10vw;
@@ -60,14 +66,21 @@
             from { opacity: 0.7; transform: scale(1); }
             to { opacity: 1; transform: scale(1.05); }
         }
+        #bgMusic {
+            display: none;
+        }
         ::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body>
 
 <div class="video-container">
-    <!-- Video chính (không tiếng, chạy 1 lần) -->
-    <iframe id="mainVideo" src="https://youtu.be/a4n12Sde4lI?si=-O11kB7cfEPehOJH" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    <!-- Video chính từ YouTube (không tiếng, tự động phát, lặp lại) -->
+    <iframe id="mainVideo" 
+            src="https://www.youtube.com/embed/a4n12Sde4lI?autoplay=1&mute=1&loop=1&playlist=a4n12Sde4lI&controls=0&modestbranding=1&rel=0" 
+            allow="autoplay; encrypted-media" 
+            allowfullscreen>
+    </iframe>
     
     <!-- Lớp phủ chữ -->
     <div class="overlay-text">
@@ -75,17 +88,22 @@
         <div class="distance" id="distanceDisplay">1000 mét</div>
         <div class="sub">cách bạn</div>
     </div>
-
-    <!-- Video nhạc nền (phát 1 lần, không lặp) -->
-    <iframe id="bgMusic" src="https://youtube.com/shorts/l3lM-4WQM8Y?si=4AB9KQQpDQLl9mXn" style="display: none;" allow="autoplay; encrypted-media"></iframe>
 </div>
+
+<!-- Nhạc nền từ YouTube Shorts (ẩn, tự động phát, lặp lại) -->
+<iframe id="bgMusic" 
+        src="https://www.youtube.com/embed/l3lM-4WQM8Y?autoplay=1&loop=1&playlist=l3lM-4WQM8Y&controls=0&modestbranding=1&rel=0" 
+        allow="autoplay; encrypted-media">
+</iframe>
 
 <script>
     let distance = 1000;
     const display = document.getElementById('distanceDisplay');
     let intervalId = null;
 
-    // ⚠️ SỬA SỐ NÀY THEO THỜI LƯỢNG NHẠC (giây)
+    // ⚠️ QUAN TRỌNG: SỬA SỐ NÀY THEO THỜI LƯỢNG NHẠC (giây)
+    // Mở video nhạc: https://youtube.com/shorts/l3lM-4WQM8Y
+    // Xem thời lượng (ví dụ 0:30 = 30 giây)
     const ESTIMATED_DURATION = 30;
 
     function startCountdown(durationInSeconds) {
