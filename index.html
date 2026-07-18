@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHẠY ĐI</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: black;
+            color: white;
+            font-family: 'Arial Black', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .video-container {
+            position: relative;
+            width: 80%;
+            max-width: 800px;
+            aspect-ratio: 16 / 9;
+            border: 3px solid red;
+            box-shadow: 0 0 50px rgba(255, 0, 0, 0.5);
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .overlay-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: none;
+            text-shadow: 0 0 30px rgba(255, 0, 0, 0.9);
+            z-index: 10;
+        }
+        .title {
+            font-size: 10vw;
+            color: #ff0000;
+            animation: pulse 1s infinite alternate;
+        }
+        .distance {
+            font-size: 4vw;
+            color: #ffaaaa;
+            margin-top: 20px;
+            letter-spacing: 5px;
+        }
+        .sub {
+            font-size: 2vw;
+            color: #888;
+            margin-top: 10px;
+        }
+        @keyframes pulse {
+            from { opacity: 0.7; transform: scale(1); }
+            to { opacity: 1; transform: scale(1.05); }
+        }
+        ::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="video-container">
+    <!-- Video chính (không tiếng, chạy 1 lần) -->
+    <iframe id="mainVideo" src="https://youtu.be/a4n12Sde4lI?si=-O11kB7cfEPehOJH" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+    
+    <!-- Lớp phủ chữ -->
+    <div class="overlay-text">
+        <div class="title">CHẠY ĐI</div>
+        <div class="distance" id="distanceDisplay">1000 mét</div>
+        <div class="sub">cách bạn</div>
+    </div>
+
+    <!-- Video nhạc nền (phát 1 lần, không lặp) -->
+    <iframe id="bgMusic" src="https://youtube.com/shorts/l3lM-4WQM8Y?si=4AB9KQQpDQLl9mXn" style="display: none;" allow="autoplay; encrypted-media"></iframe>
+</div>
+
+<script>
+    let distance = 1000;
+    const display = document.getElementById('distanceDisplay');
+    let intervalId = null;
+
+    // ⚠️ SỬA SỐ NÀY THEO THỜI LƯỢNG NHẠC (giây)
+    const ESTIMATED_DURATION = 30;
+
+    function startCountdown(durationInSeconds) {
+        if (intervalId) clearInterval(intervalId);
+        const step = 999 / durationInSeconds;
+        let currentDistance = 1000;
+
+        intervalId = setInterval(() => {
+            currentDistance -= step;
+            if (currentDistance <= 1) {
+                currentDistance = 1;
+                clearInterval(intervalId);
+                intervalId = null;
+            }
+            display.textContent = Math.round(currentDistance) + ' mét';
+        }, 1000);
+    }
+
+    window.onload = function() {
+        setTimeout(() => {
+            startCountdown(ESTIMATED_DURATION);
+        }, 2000);
+    };
+
+    setTimeout(() => {
+        if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+            display.textContent = '1 mét';
+        }
+    }, (ESTIMATED_DURATION + 3) * 1000);
+</script>
+
+</body>
+</html>
